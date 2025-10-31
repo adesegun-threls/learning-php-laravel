@@ -1,166 +1,141 @@
-# Laravel Example Application
+# Laravel Event Management API
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-A starter Laravel application built with Laravel 12 and Vite, featuring Tailwind CSS for styling and modern PHP 8.2+ features.
+A **RESTful API** built with **Laravel 12**, **Sanctum authentication**, and **PHP 8.2+** for managing events and attendees. This is a learning project demonstrating API-first development with modern Laravel.
 
-## Quick Start
+## 🚀 Features
 
-### Prerequisites
+- ✅ **RESTful API** - JSON responses, no HTML views
+- ✅ **Token-based Authentication** - Laravel Sanctum
+- ✅ **Event Management** - Create, read, update, delete events
+- ✅ **Attendee Management** - Register for events, view attendees
+- ✅ **Authorization** - Only event creators can modify their events
+- ✅ **Validation** - Input validation on all endpoints
+- ✅ **Relationships** - Eloquent ORM with proper model relationships
 
-Before you begin, ensure you have the following installed on your system:
+## 📋 API Endpoints
 
-- **PHP 8.2 or higher** - [Download PHP](https://www.php.net/downloads)
-- **Composer** - [Install Composer](https://getcomposer.org/download/)
-- **Node.js & npm** - [Download Node.js](https://nodejs.org/)
-- **Database** (MySQL, PostgreSQL, SQLite, or SQL Server)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd example-app
-   ```
-
-2. **Install PHP dependencies**
-   ```bash
-   composer install
-   ```
-
-3. **Install Node.js dependencies**
-   ```bash
-   npm install
-   ```
-
-4. **Create environment file**
-   ```bash
-   cp .env.example .env
-   ```
-
-5. **Generate application key**
-   ```bash
-   php artisan key:generate
-   ```
-
-6. **Configure your database**
-   
-   Edit the `.env` file and update the database configuration:
-   ```env
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=your_database_name
-   DB_USERNAME=your_username
-   DB_PASSWORD=your_password
-   ```
-
-7. **Run database migrations**
-   ```bash
-   php artisan migrate
-   ```
-
-8. **Build frontend assets**
-   ```bash
-   npm run build
-   ```
-
-## Running the Application
-
-### Development Mode
-
-1. **Start the Laravel development server**
-   ```bash
-   php artisan serve
-   ```
-   The application will be available at `http://localhost:8000`
-
-2. **Start the Vite development server** (in a separate terminal)
-   ```bash
-   npm run dev
-   ```
-   This enables hot reloading for CSS and JavaScript changes.
-
-### Production Mode
-
-1. **Build production assets**
-   ```bash
-   npm run build
-   ```
-
-2. **Configure your web server** to point to the `public` directory
-
-## Available Commands
-
-### Artisan Commands
-- `php artisan serve` - Start the development server
-- `php artisan migrate` - Run database migrations
-- `php artisan migrate:fresh` - Drop all tables and re-run migrations
-- `php artisan db:seed` - Run database seeders
-- `php artisan tinker` - Interactive PHP shell
-- `php artisan route:list` - List all registered routes
-- `php artisan make:controller ControllerName` - Create a new controller
-- `php artisan make:model ModelName` - Create a new model
-- `php artisan make:migration migration_name` - Create a new migration
-
-### NPM Scripts
-- `npm run dev` - Start Vite development server with hot reloading
-- `npm run build` - Build assets for production
-
-## Project Structure
-
+### Authentication
 ```
-├── app/                    # Application logic
-│   ├── Http/Controllers/   # HTTP controllers
-│   ├── Models/            # Eloquent models
-│   └── Providers/         # Service providers
-├── config/                # Configuration files
-├── database/              # Migrations, factories, and seeders
-├── public/                # Web server document root
-├── resources/             # Views, CSS, JS, and other assets
-│   ├── css/              # CSS files (processed by Vite)
-│   ├── js/               # JavaScript files (processed by Vite)
-│   └── views/            # Blade template files
-├── routes/                # Route definitions
-│   ├── web.php           # Web routes
-│   └── console.php       # Console routes
-├── storage/               # Logs, cache, and uploaded files
-└── tests/                 # Automated tests
+POST   /api/register          - Register new user
+POST   /api/login             - Login and get token
+POST   /api/logout            - Logout (revoke token)
+GET    /api/user              - Get authenticated user
 ```
 
-## Testing
+### Events (Protected)
+```
+GET    /api/events            - List all events
+POST   /api/events            - Create event
+GET    /api/events/{id}       - Show event
+PUT    /api/events/{id}       - Update event (creator only)
+DELETE /api/events/{id}       - Delete event (creator only)
+```
+
+### Attendees (Protected)
+```
+GET    /api/events/{id}/attendees       - List attendees
+POST   /api/events/{id}/attendees       - Register for event
+DELETE /api/events/{id}/attendees/{id}  - Cancel attendance
+```
+
+## 🏃 Quick Start
+
+## 🏃 Quick Start
+
+### One Command Setup
+```bash
+composer setup
+```
+This will:
+- Install dependencies
+- Copy `.env.example` to `.env`
+- Generate application key
+- Run migrations
+- Build frontend assets
+
+### Start Development Server
+```bash
+composer dev
+```
+This starts:
+- Laravel server (http://localhost:8000)
+- Queue worker
+- Log viewer (Pail)
+- Vite dev server
+
+### Test the API
+```bash
+# Register a user
+curl -X POST http://localhost:8000/api/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@example.com","password":"password","password_confirmation":"password"}'
+
+# Use the token from response to access protected endpoints
+curl http://localhost:8000/api/events \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+## 📚 Documentation
+
+- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Complete testing guide with cURL examples
+- **[API_GUIDE.md](API_GUIDE.md)** - Detailed API architecture and patterns
+- **[API_QUICKREF.md](API_QUICKREF.md)** - Quick reference for common operations
+- **[SETUP_TODO.md](SETUP_TODO.md)** - Setup checklist and next steps
+
+## 🛠️ Tech Stack
+
+- **Laravel 12** - PHP framework
+- **Laravel Sanctum** - API authentication
+- **Laravel Breeze** - Authentication scaffolding
+- **PHP 8.2+** - Modern PHP features
+- **SQLite** - Database (tests use in-memory)
+- **Vite** - Asset bundling
+
+## 📦 Project Structure
+
+```
+app/
+├── Http/Controllers/Api/
+│   ├── EventController.php      # Event CRUD operations
+│   └── AttendeeController.php   # Attendee management
+├── Models/
+│   ├── User.php                 # User model with API tokens
+│   ├── Event.php                # Event model
+│   └── Attendee.php             # Attendee model
+routes/
+├── api.php                      # API endpoints (protected by Sanctum)
+└── auth.php                     # Authentication endpoints
+database/
+└── migrations/
+    ├── create_events_table.php
+    └── create_attendees_table.php
+```
+
+## 🧪 Testing
 
 Run the test suite:
 ```bash
-php artisan test
+composer test
 ```
 
-Or using PHPUnit directly:
+Run tests with coverage:
 ```bash
-./vendor/bin/phpunit
+php artisan test --coverage
 ```
 
-## Troubleshooting
+## 🎓 Learning Resources
 
-### Common Issues
+- [Laravel Documentation](https://laravel.com/docs/12.x)
+- [Laravel Sanctum](https://laravel.com/docs/12.x/sanctum)
+- [RESTful API Design](https://restfulapi.net/)
+- [API Testing Guide](TESTING_GUIDE.md) - Comprehensive examples
 
-1. **Permission errors**: Ensure `storage` and `bootstrap/cache` directories are writable
-   ```bash
-   chmod -R 775 storage bootstrap/cache
-   ```
+## 🤝 Contributing
 
-2. **Missing .env file**: Copy `.env.example` to `.env` and configure your settings
+This is a learning project. Feel free to fork and experiment!
 
-3. **Database connection errors**: Verify your database credentials in `.env`
-
-4. **Asset loading issues**: Run `npm run build` or `npm run dev`
-
-## Learning Resources
-
-- [Laravel Documentation](https://laravel.com/docs) - Official Laravel documentation
-- [Laracasts](https://laracasts.com) - Video tutorials for Laravel and PHP
-- [Laravel News](https://laravel-news.com) - Latest Laravel updates and tutorials
-
-## License
+## 📝 License
 
 This Laravel application is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
