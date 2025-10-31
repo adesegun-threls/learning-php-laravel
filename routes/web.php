@@ -2,11 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return ['Laravel' => app()->version()];
-});
+// API-first application - no web routes needed
+// All routes are in routes/api.php
 
-// Web-based authentication routes are disabled
-// This is an API-first application using token-based authentication
-// See routes/api.php for API authentication endpoints
-// require __DIR__.'/auth.php';
+Route::get('/', function () {
+    return [
+        'name' => 'Event Management API',
+        'version' => '1.0',
+        'laravel' => app()->version(),
+        'documentation' => url('/api/documentation'),
+    ];
+});

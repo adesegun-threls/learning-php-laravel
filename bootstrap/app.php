@@ -5,21 +5,17 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))
-    // ROUTE CONFIGURATION (replaces RouteServiceProvider from Laravel 10)
+    // ROUTE CONFIGURATION - API-first application
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',          // Web routes (session-based auth)
-        api: __DIR__.'/../routes/api.php',          // API routes (auto-prefixed with /api)
+        web: __DIR__.'/../routes/web.php',          // Minimal web routes (health checks, docs)
+        api: __DIR__.'/../routes/api.php',          // API routes (JWT authentication)
         commands: __DIR__.'/../routes/console.php', // Artisan commands
         health: '/up',                               // Health check endpoint
     )
-    // MIDDLEWARE CONFIGURATION (replaces Kernel from Laravel 10)
+    // MIDDLEWARE CONFIGURATION
     ->withMiddleware(function (Middleware $middleware): void {
-        // Register middleware aliases (shorthand names)
-        $middleware->alias([
-            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-        ]);
-
-        //
+        // API-first: No session/cookie middleware needed for API routes
+        // Passport JWT handles authentication via Authorization header
     })
     // EXCEPTION HANDLING
     ->withExceptions(function (Exceptions $exceptions): void {
