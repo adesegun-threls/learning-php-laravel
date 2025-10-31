@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable; // TODO: Add HasApiTokens after installing Sanctum
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -45,5 +45,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the events created by this user.
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    /**
+     * Get the events this user is attending.
+     */
+    public function attendedEvents()
+    {
+        return $this->hasMany(Attendee::class);
     }
 }
