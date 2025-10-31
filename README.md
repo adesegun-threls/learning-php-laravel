@@ -2,7 +2,94 @@
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-A **RESTful API** built with **Laravel 12**, **Sanctum authentication**, and **PHP 8.2+** for managing events and attendees. This is a learning project demonstrating API-first development with modern Laravel.
+A **RESTful API** built with **Laravel 12**, **Sanctum authentication**, and **PHP 8.2+** for managing events and attendees.
+
+## 🚀 Quick Start
+
+```bash
+# One-command setup
+composer setup
+
+# Start development server
+composer dev
+
+# Run tests
+composer test
+```
+
+**Test User:** `test@example.com` / `password`
+
+## 📋 API Endpoints
+
+### Authentication
+- `POST /api/register` - Register user
+- `POST /api/login` - Get auth token
+- `GET /api/user` - Get current user
+
+### Events (Protected)
+- `GET /api/events` - List all
+- `POST /api/events` - Create
+- `GET /api/events/{id}` - Show one
+- `PUT /api/events/{id}` - Update (creator only)
+- `DELETE /api/events/{id}` - Delete (creator only)
+
+### Attendees (Protected)
+- `GET /api/events/{id}/attendees` - List
+- `POST /api/events/{id}/attendees` - Register
+- `DELETE /api/events/{id}/attendees/{id}` - Cancel
+
+## 🧪 Quick Test
+
+```bash
+# Start server
+composer dev
+
+# Login
+curl -X POST http://localhost:8000/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password"}'
+
+# Use token from response
+curl http://localhost:8000/api/events \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## 📚 Documentation
+
+**[→ Read the Complete Development Guide](DEVELOPMENT.md)**
+
+Everything you need:
+- API testing examples
+- Factories & seeding
+- Route configuration  
+- Common commands
+- Development tips
+
+## 🛠️ Tech Stack
+
+- Laravel 12 + PHP 8.2
+- Laravel Sanctum (API auth)
+- SQLite (tests use in-memory)
+- Vite + Tailwind CSS
+
+## 📦 What's Included
+
+✅ RESTful API with JWT authentication  
+✅ Event and Attendee management  
+✅ Comprehensive test data (23 events, 82 attendees)  
+✅ API factories for testing  
+✅ Complete API documentation  
+✅ Git-ready with proper commits
+
+## 🎓 Learning Resources
+
+- [Laravel Docs](https://laravel.com/docs/12.x)
+- [Sanctum Docs](https://laravel.com/docs/12.x/sanctum)
+- [Complete Development Guide](DEVELOPMENT.md)
+
+## 📝 License
+
+MIT
 
 ## 🚀 Features
 
