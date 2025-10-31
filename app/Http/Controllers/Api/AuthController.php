@@ -66,7 +66,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken($request->device_name ?? 'api-token')->plainTextToken;
+        $token = $user->createToken($request->device_name ?? 'api-token')->accessToken;
 
         return response()->json([
             'user' => [
@@ -134,7 +134,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = $user->createToken($request->device_name ?? 'api-token')->plainTextToken;
+        $token = $user->createToken($request->device_name ?? 'api-token')->accessToken;
 
         return response()->json([
             'user' => [
@@ -167,11 +167,32 @@ class AuthController extends Controller
      *         description="Unauthenticated"
      *     )
      * )
+    /**
+     * Revoke the current user's token (logout).
+     * 
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="Logout user (revoke token)",
+     *     description="Revoke the current access token",
+     *     tags={"Authentication"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Token revoked successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Token revoked successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
+     * )
      */
     public function logout(Request $request): JsonResponse
     {
         // Revoke the token that was used to authenticate the current request
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->token()->revoke();
 
         return response()->json([
             'message' => 'Token revoked successfully',
@@ -203,7 +224,9 @@ class AuthController extends Controller
     public function logoutAll(Request $request): JsonResponse
     {
         // Revoke all tokens for the user
-        $request->user()->tokens()->delete();
+        $request->user()->tokens()->each(function ($token) {
+            $token->revoke();
+        });
 
         return response()->json([
             'message' => 'All tokens revoked successfully',

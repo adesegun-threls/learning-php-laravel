@@ -14,11 +14,6 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     // MIDDLEWARE CONFIGURATION (replaces Kernel from Laravel 10)
     ->withMiddleware(function (Middleware $middleware): void {
-        // Add Sanctum middleware to API routes
-        $middleware->api(prepend: [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ]);
-
         // Register middleware aliases (shorthand names)
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
