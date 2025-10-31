@@ -1,8 +1,27 @@
 # 🔐 API Authentication Guide
 
-## Token-Based Authentication (Sanctum)
+## JWT Token-Based Authentication (Laravel Passport)
 
-This API uses **stateless token-based authentication** (not sessions). This is proper REST architecture.
+This API uses **JWT (JSON Web Token) authentication** via Laravel Passport. This provides true stateless, industry-standard OAuth2 authentication.
+
+### What is JWT?
+
+JWT tokens are self-contained, encoded strings with three parts:
+- **Header**: Algorithm and token type
+- **Payload**: Claims (user ID, expiration, etc.)
+- **Signature**: Cryptographic signature for verification
+
+**Example JWT:**
+```
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIwMTlhM2I...
+```
+
+**Key Benefits:**
+- ✅ **Stateless** - No database lookup needed
+- ✅ **Self-contained** - Includes user info in payload
+- ✅ **Industry standard** - OAuth2 compliance
+- ✅ **Expires automatically** - Built-in expiration
+- ✅ **Can be decoded** - Read claims without server
 
 ---
 
@@ -31,9 +50,11 @@ This API uses **stateless token-based authentication** (not sessions). This is p
     "name": "John Doe",
     "email": "john@example.com"
   },
-  "token": "1|abc123def456..."
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIwMTlhM..."
 }
 ```
+
+> **Note:** This is a real JWT token! It starts with `eyJ...` and contains encoded JSON.
 
 ---
 
@@ -58,9 +79,20 @@ This API uses **stateless token-based authentication** (not sessions). This is p
     "name": "Test User",
     "email": "test@example.com"
   },
-  "token": "2|xyz789abc123..."
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIwMTlhM..."
 }
 ```
+
+> **JWT Decoded Payload:**
+> ```json
+> {
+>   "sub": "1",           // User ID
+>   "aud": "...",         // Client ID
+>   "iat": 1761933168,    // Issued at
+>   "exp": 1793469168,    // Expires (1 year by default)
+>   "scopes": []
+> }
+> ```
 
 ---
 
@@ -127,16 +159,34 @@ Authorization: Bearer YOUR_TOKEN
 
 ---
 
-## Key Differences from Session Auth
+## Key Differences from Sanctum
 
-| Session-Based (Web)          | Token-Based (API)                    |
+| Sanctum (Database Tokens)   | Passport (JWT)                       |
 |------------------------------|--------------------------------------|
-| Returns 204 (no content)     | Returns user + token                 |
-| Uses cookies/sessions        | Uses Authorization header            |
-| Stateful (server stores)     | Stateless (client stores token)      |
-| CSRF protection required     | No CSRF needed                       |
-| Logout destroys session      | Logout revokes token                 |
-| Not suitable for mobile/SPA  | Perfect for mobile/SPA/microservices |
+| Token: `1\|abc123...`        | Token: `eyJ0eXAiOiJKV1Qi...`         |
+| Stored in database           | Self-contained (no storage)          |
+| Requires database lookup     | Stateless (no DB query)              |
+| Manual expiration            | Auto-expires (configurable)          |
+| Simple personal tokens       | Full OAuth2 server                   |
+| Good for SPAs with cookies   | Perfect for mobile/API-first         |
+
+---
+
+## JWT Token Lifetime
+
+- **Default:** 1 year (31,536,000 seconds)
+- **Configure in:** `config/passport.php`
+- **Refresh tokens:** Available for long-lived sessions
+
+```php
+// config/passport.php
+'personal_access_client' => [
+    'secret' => env('PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET'),
+],
+
+// Token expiration
+'tokens_expire_in' => 365, // days
+```
 
 ---
 
@@ -193,21 +243,51 @@ curl -X POST http://localhost:8000/api/events \
 
 ## Security Best Practices
 
-1. **Store tokens securely**
-   - Web: Use httpOnly cookies or sessionStorage (NOT localStorage for sensitive apps)
+1. **Store JWT tokens securely**
+   - Web: Use httpOnly cookies or sessionStorage
    - Mobile: Use secure storage (Keychain/Keystore)
+   - NEVER store in localStorage for sensitive apps
 
-2. **Token lifetime**
-   - Tokens don't expire by default in Sanctum
-   - Configure expiration in `config/sanctum.php` if needed
+2. **Token expiration**
+   - Tokens expire automatically (default: 1 year)
+   - Configure in `config/passport.php`
+   - Use refresh tokens for long sessions
 
-3. **HTTPS only**
-   - Always use HTTPS in production
-   - Tokens in plain HTTP can be intercepted
+3. **HTTPS only in production**
+   - Always use HTTPS
+   - JWT tokens can be decoded by anyone (base64)
+   - Signature prevents tampering, not reading
 
 4. **Revoke compromised tokens**
    - Use `/api/logout-all` if account is compromised
-   - Tokens are stored in `personal_access_tokens` table
+   - Tokens stored in `oauth_access_tokens` table
+   - Can manually revoke via database
+
+5. **Validate on every request**
+   - Passport validates signature automatically
+   - Checks expiration on each request
+   - Invalid tokens rejected immediately
+
+---
+
+## JWT Structure
+
+A JWT token has 3 parts separated by dots:
+
+```
+header.payload.signature
+```
+
+**Example:**
+```
+eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9     ← Header (algorithm)
+.
+eyJhdWQiOiIwMTlhM2I1Yi0wMDM4...           ← Payload (claims)
+.
+v5CCBp9S2gg_YCfLxCveJVWS5fr0...           ← Signature (RSA-256)
+```
+
+You can decode the payload at [jwt.io](https://jwt.io) to see claims (but never trust unverified tokens!).
 
 ---
 
