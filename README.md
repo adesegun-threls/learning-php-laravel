@@ -21,9 +21,13 @@ composer test
 
 ## 📋 API Endpoints
 
-### Authentication
-- `POST /api/register` - Register user
-- `POST /api/login` - Get auth token
+### Authentication (Public - No token required)
+- `POST /api/register` - Register new user (returns token)
+- `POST /api/login` - Login user (returns token)
+
+### Authentication (Protected - Requires token)
+- `POST /api/logout` - Revoke current token
+- `POST /api/logout-all` - Revoke all tokens
 - `GET /api/user` - Get current user
 
 ### Events (Protected)
@@ -38,44 +42,63 @@ composer test
 - `POST /api/events/{id}/attendees` - Register
 - `DELETE /api/events/{id}/attendees/{id}` - Cancel
 
+**📖 API Documentation:** http://localhost:8000/api/documentation (Swagger UI)
+
 ## 🧪 Quick Test
 
 ```bash
 # Start server
 composer dev
 
-# Login
+# Register (get token)
+curl -X POST http://localhost:8000/api/register \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }'
+
+# Login (get token)
 curl -X POST http://localhost:8000/api/login \
   -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
   -d '{"email":"test@example.com","password":"password"}'
 
-# Use token from response
+# Use token for authenticated requests
 curl http://localhost:8000/api/events \
-  -H "Authorization: Bearer YOUR_TOKEN"
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "Accept: application/json"
 ```
 
 ## 📚 Documentation
 
-**[→ Read the Complete Development Guide](DEVELOPMENT.md)**
+**[→ API Authentication Guide](API_AUTHENTICATION.md)** - Token-based auth explained  
+**[→ Complete Development Guide](DEVELOPMENT.md)** - Everything you need
 
-Everything you need:
+Key topics:
+- Token-based authentication (stateless)
 - API testing examples
 - Factories & seeding
-- Route configuration  
-- Common commands
+- Swagger/OpenAPI docs
 - Development tips
 
 ## 🛠️ Tech Stack
 
 - Laravel 12 + PHP 8.2
-- Laravel Sanctum (API auth)
+- Laravel Sanctum (Token-based API auth)
 - SQLite (tests use in-memory)
 - Vite + Tailwind CSS
+- Swagger/OpenAPI documentation
 
 ## 📦 What's Included
 
-✅ RESTful API with JWT authentication  
+✅ Stateless token-based authentication (proper REST)  
+✅ RESTful API with Sanctum tokens  
 ✅ Event and Attendee management  
+✅ Interactive Swagger API documentation  
 ✅ Comprehensive test data (23 events, 82 attendees)  
 ✅ API factories for testing  
 ✅ Complete API documentation  
