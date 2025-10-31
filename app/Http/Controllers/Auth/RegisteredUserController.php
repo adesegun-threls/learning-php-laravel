@@ -15,6 +15,31 @@ class RegisteredUserController extends Controller
 {
     /**
      * Handle an incoming registration request.
+     * 
+     * @OA\Post(
+     *     path="/register",
+     *     summary="Register a new user",
+     *     description="Create a new user account",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","email","password","password_confirmation"},
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password123"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="User registered successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
      *
      * @throws \Illuminate\Validation\ValidationException
      */

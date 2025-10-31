@@ -12,6 +12,31 @@ class PasswordResetLinkController extends Controller
 {
     /**
      * Handle an incoming password reset link request.
+     * 
+     * @OA\Post(
+     *     path="/forgot-password",
+     *     summary="Request password reset",
+     *     description="Send password reset link to user's email",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset link sent",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="We have emailed your password reset link!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     )
+     * )
      *
      * @throws \Illuminate\Validation\ValidationException
      */

@@ -12,6 +12,29 @@ class AuthenticatedSessionController extends Controller
 {
     /**
      * Handle an incoming authentication request.
+     * 
+     * @OA\Post(
+     *     path="/login",
+     *     summary="Login user",
+     *     description="Authenticate user and create session",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","password"},
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Login successful"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Invalid credentials"
+     *     )
+     * )
      */
     public function store(LoginRequest $request): Response
     {
@@ -24,6 +47,22 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Destroy an authenticated session.
+     * 
+     * @OA\Post(
+     *     path="/logout",
+     *     summary="Logout user",
+     *     description="Destroy authenticated session",
+     *     tags={"Authentication"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=204,
+     *         description="Logout successful"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated"
+     *     )
+     * )
      */
     public function destroy(Request $request): Response
     {

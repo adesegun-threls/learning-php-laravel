@@ -16,6 +16,34 @@ class NewPasswordController extends Controller
 {
     /**
      * Handle an incoming new password request.
+     * 
+     * @OA\Post(
+     *     path="/reset-password",
+     *     summary="Reset password",
+     *     description="Reset user password using token from email",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"token","email","password","password_confirmation"},
+     *             @OA\Property(property="token", type="string", example="reset-token-from-email"),
+     *             @OA\Property(property="email", type="string", format="email", example="test@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="newpassword123"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password", example="newpassword123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="Your password has been reset!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error or invalid token"
+     *     )
+     * )
      *
      * @throws \Illuminate\Validation\ValidationException
      */
