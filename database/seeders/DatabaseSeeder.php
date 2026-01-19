@@ -74,6 +74,12 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        // Seed Page Builder data
+        $this->call([
+            PageBuilderSeeder::class,
+            TemplateSeeder::class,
+        ]);
+
         $this->command->info('✅ Database seeded successfully!');
         $this->command->info("📧 Test User: test@example.com | Password: password");
         $this->command->info("👥 Users: " . User::count());

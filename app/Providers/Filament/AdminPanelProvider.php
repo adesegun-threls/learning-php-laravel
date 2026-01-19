@@ -12,6 +12,8 @@ use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Threls\FilamentPageBuilder\PageBuilderPlugin;
+use Threls\FilamentPageBuilder\FilamentPageBuilderPlugin;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -39,6 +41,9 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+            ])
+            ->plugins([
+                PageBuilderPlugin::make(),
             ])
             ->middleware([
                 EncryptCookies::class,

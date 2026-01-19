@@ -1,0 +1,57 @@
+#!/bin/bash
+
+echo "🚀 Starting PB-002 Visual Testing Environment"
+echo ""
+
+# Check if server is already running
+if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null ; then
+    echo "✅ Dev server already running at http://localhost:8000"
+else
+    echo "⚠️  Dev server not running. Start with: composer run dev"
+    echo ""
+fi
+
+echo "📋 Testing Checklist:"
+echo "  1. Navigate to http://localhost:8000/admin"
+echo "  2. Login with your admin credentials"
+echo "  3. Look for 'Templates' under 'Page Builder' navigation"
+echo "  4. Follow PB002_VISUAL_TEST.md checklist"
+echo ""
+
+echo "🧪 Quick Test Template Creation:"
+echo ""
+echo "Template Name: Test Project Template"
+echo "Handle: test-project-template (auto-generated)"
+echo "Status: Draft"
+echo ""
+echo "Section 1:"
+echo "  - Key: hero"
+echo "  - Type: Layout Section"
+echo "  - Preset: Hero Section"
+echo "  "
+echo "  Component 1:"
+echo "    - Type: project-hero"
+echo "    - Slug: hero-1"
+echo "    - Template Keys:"
+echo "      * title → page_title"
+echo "      * subtitle → page_subtitle"
+echo ""
+echo "Section 2:"
+echo "  - Key: content"
+echo "  - Type: Content Section"
+echo "  - Preset: Container"
+echo "  "
+echo "  Component 1:"
+echo "    - Type: text-block"
+echo "    - Slug: main-content"
+echo "    - Template Keys:"
+echo "      * content → page_body"
+echo ""
+
+echo "📖 Full testing guide: see PB002_VISUAL_TEST.md"
+echo ""
+echo "💡 Quick checks:"
+echo "  - Component Registry working? $(cd /Users/adesegun/Documents/learning-laravel-php/example-app && php -r 'require __DIR__ . \"/vendor/autoload.php\"; \$app = require_once __DIR__ . \"/bootstrap/app.php\"; \$kernel = \$app->make(Illuminate\Contracts\Console\Kernel::class); \$kernel->bootstrap(); \$r = app(Threls\FilamentPageBuilder\Services\ComponentRegistry::class); echo \$r->getFlatComponents()->count() . \" components\";')"
+echo "  - Plugin registered? Check app/Providers/Filament/AdminPanelProvider.php"
+echo ""
+echo "✨ Happy Testing!"
