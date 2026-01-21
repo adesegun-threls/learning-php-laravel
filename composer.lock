@@ -10743,11 +10743,11 @@
         },
         {
             "name": "threls/filament-page-builder",
-            "version": "dev-forked-lib-filament-v4-support",
+            "version": "dev-TP-33-initial-setup-template-system-for-plugin",
             "dist": {
                 "type": "path",
                 "url": "../../GitHub/filament-page-builder-plugin",
-                "reference": "cb8b74e8f719652c03b2ad645ba90f37d87d8e89"
+                "reference": "44ec73580062215d891d439f07f37a9e7064e69e"
             },
             "require": {
                 "filament/filament": "^4.0",

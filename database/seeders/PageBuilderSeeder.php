@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Threls\FilamentPageBuilder\Models\Blueprint;
+use Threls\FilamentPageBuilder\Models\BlueprintVersion;
 use Threls\FilamentPageBuilder\Models\Composition;
 use Threls\FilamentPageBuilder\Models\Menu;
 use Threls\FilamentPageBuilder\Models\MenuItem;
@@ -67,13 +68,14 @@ class PageBuilderSeeder extends Seeder
                 'fields' => [
                     ['name' => 'title', 'type' => 'text', 'required' => true],
                     ['name' => 'subtitle', 'type' => 'text', 'required' => false],
+                    ['name' => 'image', 'type' => 'media', 'required' => false],
                     ['name' => 'cta_text', 'type' => 'text', 'required' => false],
                     ['name' => 'cta_url', 'type' => 'url', 'required' => false],
                 ],
             ],
         ]);
 
-        $contentBlueprint = Blueprint::create([
+        Blueprint::create([
             'name' => 'Rich Content',
             'handle' => 'rich-content',
             'category' => 'content',
@@ -86,7 +88,7 @@ class PageBuilderSeeder extends Seeder
             ],
         ]);
 
-        $featureBlueprint = Blueprint::create([
+        Blueprint::create([
             'name' => 'Feature Grid',
             'handle' => 'feature-grid',
             'category' => 'content',
@@ -99,7 +101,246 @@ class PageBuilderSeeder extends Seeder
             ],
         ]);
 
-        $this->command->info('✓ Created 3 blueprints');
+        // Layout Components
+        Blueprint::create([
+            'name' => 'Container',
+            'handle' => 'container',
+            'category' => 'layout',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'width', 'type' => 'select', 'options' => ['full', 'container', 'narrow'], 'required' => false],
+                    ['name' => 'padding', 'type' => 'text', 'required' => false],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Grid',
+            'handle' => 'grid',
+            'category' => 'layout',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'columns', 'type' => 'number', 'required' => true],
+                    ['name' => 'gap', 'type' => 'text', 'required' => false],
+                ],
+            ],
+        ]);
+
+        // Content Components
+        Blueprint::create([
+            'name' => 'Project Hero',
+            'handle' => 'project-hero',
+            'category' => 'content',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'title', 'type' => 'text', 'required' => true],
+                    ['name' => 'subtitle', 'type' => 'text', 'required' => false],
+                    ['name' => 'description', 'type' => 'textarea', 'required' => false],
+                    ['name' => 'image', 'type' => 'media', 'required' => false],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Text Block',
+            'handle' => 'text-block',
+            'category' => 'content',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'content', 'type' => 'richtext', 'required' => true],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Image Gallery',
+            'handle' => 'image-gallery',
+            'category' => 'media',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'images', 'type' => 'media_collection', 'required' => true],
+                    ['name' => 'layout', 'type' => 'select', 'options' => ['grid', 'masonry', 'carousel'], 'required' => false],
+                ],
+            ],
+        ]);
+
+        // Media Components
+        Blueprint::create([
+            'name' => 'Video Player',
+            'handle' => 'video-player',
+            'category' => 'media',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'video_url', 'type' => 'url', 'required' => true],
+                    ['name' => 'poster', 'type' => 'media', 'required' => false],
+                    ['name' => 'autoplay', 'type' => 'boolean', 'required' => false],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Single Image',
+            'handle' => 'image',
+            'category' => 'media',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'image', 'type' => 'media', 'required' => true],
+                    ['name' => 'caption', 'type' => 'text', 'required' => false],
+                    ['name' => 'alt_text', 'type' => 'text', 'required' => false],
+                ],
+            ],
+        ]);
+
+        // Interactive Components
+        Blueprint::create([
+            'name' => 'Button',
+            'handle' => 'button',
+            'category' => 'interactive',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'text', 'type' => 'text', 'required' => true],
+                    ['name' => 'url', 'type' => 'url', 'required' => true],
+                    ['name' => 'variant', 'type' => 'select', 'options' => ['primary', 'secondary', 'outline'], 'required' => false],
+                    ['name' => 'size', 'type' => 'select', 'options' => ['sm', 'md', 'lg'], 'required' => false],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Contact Form',
+            'handle' => 'contact-form',
+            'category' => 'forms',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'form_id', 'type' => 'text', 'required' => true],
+                    ['name' => 'success_message', 'type' => 'text', 'required' => false],
+                    ['name' => 'fields', 'type' => 'repeater', 'required' => true],
+                ],
+            ],
+        ]);
+
+        // Content Cards
+        Blueprint::create([
+            'name' => 'Card',
+            'handle' => 'card',
+            'category' => 'content',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'title', 'type' => 'text', 'required' => true],
+                    ['name' => 'description', 'type' => 'textarea', 'required' => false],
+                    ['name' => 'image', 'type' => 'media', 'required' => false],
+                    ['name' => 'link', 'type' => 'url', 'required' => false],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Testimonial',
+            'handle' => 'testimonial',
+            'category' => 'content',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'quote', 'type' => 'textarea', 'required' => true],
+                    ['name' => 'author', 'type' => 'text', 'required' => true],
+                    ['name' => 'role', 'type' => 'text', 'required' => false],
+                    ['name' => 'avatar', 'type' => 'media', 'required' => false],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'FAQ Item',
+            'handle' => 'faq-item',
+            'category' => 'content',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'question', 'type' => 'text', 'required' => true],
+                    ['name' => 'answer', 'type' => 'richtext', 'required' => true],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Accordion',
+            'handle' => 'accordion',
+            'category' => 'interactive',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'title', 'type' => 'text', 'required' => true],
+                    ['name' => 'items', 'type' => 'repeater', 'required' => true],
+                    ['name' => 'allow_multiple', 'type' => 'boolean', 'required' => false],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Tabs',
+            'handle' => 'tabs',
+            'category' => 'interactive',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'tabs', 'type' => 'repeater', 'required' => true],
+                    ['name' => 'default_tab', 'type' => 'number', 'required' => false],
+                ],
+            ],
+        ]);
+
+        // Typography
+        Blueprint::create([
+            'name' => 'Heading',
+            'handle' => 'heading',
+            'category' => 'typography',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'text', 'type' => 'text', 'required' => true],
+                    ['name' => 'level', 'type' => 'select', 'options' => ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], 'required' => true],
+                    ['name' => 'style', 'type' => 'select', 'options' => ['default', 'display', 'subtitle'], 'required' => false],
+                ],
+            ],
+        ]);
+
+        Blueprint::create([
+            'name' => 'Paragraph',
+            'handle' => 'paragraph',
+            'category' => 'typography',
+            'status' => 'published',
+            'working_schema' => [
+                'fields' => [
+                    ['name' => 'text', 'type' => 'richtext', 'required' => true],
+                    ['name' => 'size', 'type' => 'select', 'options' => ['sm', 'base', 'lg', 'xl'], 'required' => false],
+                ],
+            ],
+        ]);
+
+        $this->command->info('✓ Created 20 blueprints across 7 categories');
+
+        // Create BlueprintVersions for all blueprints
+        $blueprints = Blueprint::all();
+        foreach ($blueprints as $blueprint) {
+            BlueprintVersion::create([
+                'blueprint_id' => $blueprint->id,
+                'version' => 1,
+                'status' => 'published',
+                'schema' => $blueprint->working_schema,
+            ]);
+        }
+
+        $this->command->info('✓ Created initial versions for all blueprints');
 
         // Create Relationship Types
         RelationshipType::create([
@@ -116,7 +357,7 @@ class PageBuilderSeeder extends Seeder
 
         $this->command->info('✓ Created 1 relationship type');
 
-        // Create Compositions
+        // Create Compositions (using Hero blueprint from above)
         Composition::create([
             'name' => 'Home Page Layout',
             'payload' => [
@@ -136,7 +377,8 @@ class PageBuilderSeeder extends Seeder
                 'handle' => 'about-page-layout',
                 'sections' => [
                     ['blueprint' => 'hero-section', 'order' => 1],
-                    ['blueprint' => 'rich-content', 'order' => 2],
+                    ['blueprint' => 'text-block', 'order' => 2],
+                    ['blueprint' => 'testimonial', 'order' => 3],
                 ],
             ],
             'is_active' => true,

@@ -74,8 +74,9 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Seed Page Builder data
+        // Seed Page Builder data and admin user
         $this->call([
+            AdminUserSeeder::class,
             PageBuilderSeeder::class,
             TemplateSeeder::class,
         ]);
